@@ -6,7 +6,7 @@ class Modules(models.Model):
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    course = models.ForeignKey("courses.Courses", on_delete=models.CASCADE)
+    course = models.ForeignKey("courses.Course", on_delete=models.CASCADE)
     module_number = models.IntegerField(unique=True, blank=True, null=True)
     
     def __str__(self):

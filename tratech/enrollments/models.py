@@ -4,7 +4,7 @@ from django.db import models
 # Create your models here.
 class Enrollment(models.Model):
     user = models.ForeignKey("users.User", on_delete=models.CASCADE)
-    course = models.ForeignKey("courses.Courses", on_delete=models.CASCADE)
+    course = models.ForeignKey("courses.Course", on_delete=models.CASCADE)
     enrolled_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

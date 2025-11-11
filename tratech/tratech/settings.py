@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import environ, os
-
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -43,24 +43,25 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
     "rest_framework",
     "actstream",
     "users",
+    "enrollments",
     "courses",
     "corsheaders",
-    "enrollments",
     "lessons",
     "modules",
-    "actions"
+    "actions",
 ]
 
 SITE_ID = 1
 
 ACTSTREAM_SETTINGS = {
-    'FETCH_RELATIONS': True,
-    'USE_PREFETCH': True,
-    'USE_JSONFIELD': True,
-    'GFK_FETCH_DEPTH': 1,
+    "FETCH_RELATIONS": True,
+    "USE_PREFETCH": True,
+    "USE_JSONFIELD": True,
+    "GFK_FETCH_DEPTH": 1,
 }
 
 MIDDLEWARE = [
@@ -76,7 +77,7 @@ MIDDLEWARE = [
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "users.middlewares.JWTAuthenticationMiddleware",
+        "users.middleware.ClerkAuthentication",
         "rest_framework.authentication.BasicAuthentication",
         "rest_framework.authentication.SessionAuthentication",
     ),
@@ -106,12 +107,12 @@ WSGI_APPLICATION = "tratech.wsgi.application"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    "default": dj_database_url.config(
+        default=env("DATABASE_URL"),  # Use an environment variable
+        conn_max_age=30,
+        ssl_require=True,
+    )
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -143,6 +144,7 @@ USE_I18N = True
 
 USE_TZ = True
 
+AUTH_USER_MODEL = "users.User"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/

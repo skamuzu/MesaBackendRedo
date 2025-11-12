@@ -65,7 +65,6 @@ ACTSTREAM_SETTINGS = {
 }
 
 MIDDLEWARE = [
-    "users.middleware.JWTAuthenticationMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -108,9 +107,7 @@ WSGI_APPLICATION = "tratech.wsgi.application"
 
 DATABASES = {
     "default": dj_database_url.config(
-        default=env("DATABASE_URL"),  # Use an environment variable
-        conn_max_age=30,
-        ssl_require=True,
+        default=env("DATABASE_URL"), 
     )
 }
 

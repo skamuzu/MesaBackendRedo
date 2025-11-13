@@ -21,6 +21,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env(DEBUG=(bool, False))
 environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
+DATABASE_URL = env("DATABASE_URL")
+CLERK_WEBHOOK_SECRET = env("CLERK_WEBHOOK_SECRET")
+CLERK_SECRET_KEY= env("CLERK_SECRET_KEY")
+CLERK_FRONTEND_API_URL=env("CLERK_FRONTEND_API_URL")
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -31,13 +36,12 @@ SECRET_KEY = "django-insecure-i8+cd1(c$_v&puck8g5se1-7h3&sy$jn2=o441xw@xc8%w6p#g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['nonlaying-ciera-unplagiarized.ngrok-free.dev','127.0.0.1' ]
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -45,6 +49,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.sites",
     "rest_framework",
+    'drf_spectacular',
     "actstream",
     "users",
     "enrollments",
@@ -65,6 +70,7 @@ ACTSTREAM_SETTINGS = {
 }
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -80,7 +86,15 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.BasicAuthentication",
         "rest_framework.authentication.SessionAuthentication",
     ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Tratech API',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}
+
 
 ROOT_URLCONF = "tratech.urls"
 
@@ -107,9 +121,13 @@ WSGI_APPLICATION = "tratech.wsgi.application"
 
 DATABASES = {
     "default": dj_database_url.config(
-        default=env("DATABASE_URL"), 
+        default=DATABASE_URL, 
     )
 }
+
+CORS_ALLOWED_ORIGINS = [
+     "http://localhost:5173",
+]
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

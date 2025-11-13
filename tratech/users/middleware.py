@@ -3,9 +3,8 @@ from rest_framework.authentication import BaseAuthentication, exceptions
 from clerk_backend_api.security.types import AuthenticateRequestOptions
 from django.contrib.auth import get_user_model
 import environ
+from django.conf import settings
 
-env = environ.Env()
-environ.Env.read_env()
 class ClerkAuthentication(BaseAuthentication):
     def authenticate(self, request):
         auth_headers: str = request.headers.get("Authorization")
@@ -13,10 +12,10 @@ class ClerkAuthentication(BaseAuthentication):
             return None
         
         token = auth_headers.split(" ")[1]
-        clerk = Clerk(bearer_auth=env("CLERK_SECRET_KEY"))
+        clerk = Clerk(bearer_auth=settings.CLERK_SECRET_KEY)
         
         opts = AuthenticateRequestOptions(
-            authorized_parties=[env("CLERK_FRONTEND_API_URL")],
+            authorized_parties=[settings.CLERK_FRONTEND_API_URL],
         )
         
         try:

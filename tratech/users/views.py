@@ -5,9 +5,9 @@ from svix.webhooks import Webhook, WebhookVerificationError
 from django.conf import settings
 from rest_framework.decorators import api_view
 from .models import User
-import environ
+from actstream import action
 
-CLERK_WEBHOOK_SECRET = environ.Env().get("CLERK_WEBHOOK_SECRET")
+
 
 
 @csrf_exempt
@@ -26,15 +26,23 @@ def clerk_webhook(request):
 
     event_type = event["type"]
     data = event["data"]
+    
+    if len(data["email_addresses"]) == 0:
+        email = None
+    else:
+        email =  data["email_addresses"][0]["email_address"]
 
     if event_type == "user.created":
-        User.objects.get_or_create(
+        user, created = User.objects.get_or_create(
             clerk_id=data["id"],
             defaults={
-                "email": data["email_addresses"][0]["email_address"],
-                "name": f"{data.get('first_name', '')} {data.get('last_name', '')}".strip(),
+                "email": email,
+                "first_name": data.get("first_name"),
+                "last_name":data.get("last_name")
             },
         )
+        if created:
+            action.send(user, verb="just joined the platform")
 
     elif event_type == "user.updated":
         try:

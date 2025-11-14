@@ -36,7 +36,7 @@ SECRET_KEY = "django-insecure-i8+cd1(c$_v&puck8g5se1-7h3&sy$jn2=o441xw@xc8%w6p#g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['nonlaying-ciera-unplagiarized.ngrok-free.dev','127.0.0.1' ]
+ALLOWED_HOSTS = ['nonlaying-ciera-unplagiarized.ngrok-free.dev','127.0.0.1', "localhost" ]
 
 
 # Application definition
@@ -128,6 +128,17 @@ DATABASES = {
 CORS_ALLOWED_ORIGINS = [
      "http://localhost:5173",
 ]
+
+CORS_ALLOW_HEADERS = [
+    "authorization",
+    "content-type",
+    "accept",
+    "origin",
+    "x-csrftoken",
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

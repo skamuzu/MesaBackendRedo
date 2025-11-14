@@ -15,7 +15,7 @@ class ClerkAuthentication(BaseAuthentication):
         clerk = Clerk(bearer_auth=settings.CLERK_SECRET_KEY)
         
         opts = AuthenticateRequestOptions(
-            authorized_parties=[settings.CLERK_FRONTEND_API_URL],
+            authorized_parties=[settings.CLERK_FRONTEND_API_URL,'http://localhost:5173'],
         )
         
         try:
@@ -35,7 +35,7 @@ class ClerkAuthentication(BaseAuthentication):
         
         User = get_user_model()
         try :
-            user = User.objects.get(clerkID=clerk_user_id)
+            user = User.objects.get(clerk_id=clerk_user_id)
         except User.DoesNotExist:
             return exceptions.AuthenticationFailed("User not found in local database")
         
